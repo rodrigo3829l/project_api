@@ -12,17 +12,20 @@ import cors from 'cors'
 
 const app = express();
 
-const whiteList = [process.env.ORIGIN1]
+console.log("Hola bd => " , process.env.URI_MONGO);
 
-// app.use(cors({
-//     origin: function (origin, callback){
-//         console.log("HOla origin => ", origin)
-//         if(whiteList.includes(origin)){
-//             return callback(null, origin);
-//         }
-//         return callback("Error de corse origin: " + origin + " no autorizado")
-//     }
-// }))
+const whiteList = [process.env.ORIGIN1, process.env.ORIGIN2]
+
+app.use(
+    cors({
+        origin: function (origin, callback){
+            console.log("HOla origin => ", origin)
+            if(!origin || whiteList.includes(origin)){
+                return callback(null, origin);
+            }
+            return callback("Error de corse origin: " + origin + " no autorizado")
+        }
+}))
 
 app.use(express.json());
 app.use(cookieParser())

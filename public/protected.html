@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected</title>
+</head>
+<body>
+    <h1>Ruta protegida</h1>
+    <div id="app">
+        <h2 id="user">userName: </h2>
+        <h2 id="email">email: </h2>
+    </div>
+    <button id="logout">Cerrar sesion </button>
+
+    <script>
+
+        const logout = document.querySelector("#logout")
+        logout.addEventListener('click', async() => {
+            const res = await fetch( '/api/v1/auth/logout',{
+                    method: 'GET',
+                    // headers: {
+                    //     'Authorization': `Bearer ${token}`,
+                    //     'Content-Type': 'application/json'
+                    // },
+                    //credentials: 'include',
+
+                })
+                console.log(res)
+        })
+        document.addEventListener('DOMContentLoaded', async e => {
+            try {
+                const resToken = await fetch('/api/v1/auth/refresh',{
+                    method: 'GET',
+                    credentials: 'include',
+                })
+
+                const {token } = await resToken.json()
+                //const token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NDA0MGQ2OWFmYjBhMmE1ZjIwZjlmZjciLCJpYXQiOjE2NzgwMDMwMDMsImV4cCI6MTY3ODAwMzkwM30.qFQEYIjrk1JUWqaYdehcjToXO_XnjnEShHRQ6lcJThI'
+                const res = await fetch( '/api/v1/auth/protected',{
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    //credentials: 'include',
+
+                })
+                console.log(res.ok, res.status);
+                const data = await res.json();
+                
+                if(res.ok){
+                    document.querySelector("#user").textContent = data.userName;
+                    document.querySelector("#email").textContent= data.email;
+                }
+
+
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    </script>
+</body>
+</html>

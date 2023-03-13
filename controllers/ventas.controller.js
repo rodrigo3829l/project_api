@@ -22,7 +22,7 @@ export const addVenta = async (req, res) => {
         for ( i = 0 ;  i < paquetes.length; i++){
             const paquete = await Paquetes.findById(paquetes[i].idPaquete);
             paquetes[i].total = paquete.precio * paquetes[i].cantidad
-            if(paquete.existencia < paquetes[i].cantidad) return res.status(400).json({error: `No se concreto la venta, paquete ${paquete.nombre} insuficiente, cantidad en stock: ${paquete.existencia}`});
+            if(paquete.existencia <  paquetes[i].cantidad) return res.status(400).json({error: `No se concreto la venta, paquete ${paquete.nombre} insuficiente, cantidad en stock: ${paquete.existencia}`});
             paquete.existencia =  (Number(paquete.existencia) - paquetes[i].cantidad).toString();
             if(paquete.existencia === "0") paquete.estado = "No disponible"
             totalPaqs = totalPaqs + Number(paquetes[i].total);

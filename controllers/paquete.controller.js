@@ -26,7 +26,7 @@ export const addPaquetes = async (req, res) => {
         let addPaquete = await Paquetes.findOne({nombre});
         if(addPaquete) throw {code: 11000};
     
-        addPaquete = new Paquetes ({
+        addPaquete = new Pclgquetes ({
             nombre,
             descripcion,
             precio,

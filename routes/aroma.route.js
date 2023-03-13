@@ -6,12 +6,12 @@ import { bodyAromaValidator, paramLinkValidator } from "../middlewares/validatos
 const router = Router()
 
 //añade mas aromas
-router.post('/', requireToken, bodyAromaValidator, addAroma )
+router.post('/'  , addAroma )
 //Extrae la lista de los aromas
 router.get('/', getAromas);
 //actualiza un aroma mediante el id
-router.patch('/:id', requireToken, paramLinkValidator, bodyAromaValidator,  updateAroma);
+router.patch('/:id', updateAroma);
 //extrae un aroma en especifico
-router.get('/:id', paramLinkValidator, getAroma);
+router.get('/:id',  getAroma);
 
 export default router;

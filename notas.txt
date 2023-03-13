@@ -1,0 +1,89 @@
+import { Aroma } from "../models/Aroma.js";
+import { Productos } from "../models/Productos.js";
+
+export const addProduct = async (req, res) => {
+    const  {nombre, descripcion, aroma, existencia, tipo, img} = req.body;
+    console.log(aroma)
+    const aromaIds = aroma.map(item => item.id_aroma);
+
+    try {
+        let newProduct = await Productos.findOne({nombre});
+        if(newProduct) throw {code: 11000};
+
+        newProduct = new Productos ({
+            nombre,
+            descripcion,
+            aroma : aromaIds,
+            existencia,
+            tipo,
+            img,
+        });
+        console.log(newProduct)
+
+        const añadeProduct = await newProduct.save();
+        return res.status(201).json({añadeProduct});
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Ya existe el producto' });
+        }
+        return res.status(500).json({ error: 'Algo fallo en el servidor o la base de datos' });
+    }
+}
+
+export const getProducto = async (req, res) =>{
+    try {
+        const {id} = req.params;
+        const products = await Productos.findById(id);
+        // if(!products) throw new Error ("No hay productos")
+        let aromas = '';
+        for (let i = 0; i < products.aroma.length; i++){
+            const ar = await Aroma.findById(products.aroma[i]);
+            aromas = aromas + ar.aroma + ', ';
+        }
+        console.log(aromas);
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({error: 'Error de servidor'})
+    }
+}
+
+
+
+
+export const getPaquete = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const {
+            nombre,
+            descripcion,
+            precio,
+            stock,
+            img,
+            productos,
+            existencia,
+            estado,
+        } = await Paquetes.findById(id);
+        let getProductos = [];
+        let i
+        for ( i = 0; i < productos.length ;i++){
+            //console.log(productos[i].toString())
+            const product = await Productos.findById(productos[i].toString());
+            getProductos.push(product.nombre);
+        }
+        console.log(getProductos);
+        const getPaquete = new GetPaquetes({
+            nombre,
+            descripcion,
+            precio,
+            stock,
+            img,
+            productos : getProductos,
+            existencia,
+            estado,
+        })
+        return res.status(201).json({getPaquete});
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({error: 'Error de servidor'})
+    }
+}

@@ -8,7 +8,7 @@ export const addRol = async (req, res) => {
 
         addRols = new Roles ({rol, permisos});
         const newRol = await addRols.save();
-        return res.status(201).json({newRol})
+        return res.status(201).json({newRol});
     } catch (error) {
       if (error.code === 11000) {
         return res.status(400).json({ error: 'Ya existe el rol' });

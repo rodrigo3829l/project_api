@@ -8,6 +8,10 @@ import linkRouter from './routes/link.route.js'
 import redirecRouter from './routes/redirect.router.js'
 import aromaRouter from './routes/aroma.route.js'
 import rolesRouter from './routes/roles.route.js'
+import productosRouter from './routes/productos.route.js'
+import paquetesRouter from './routes/paquetes.route.js'
+import encargadoRouter from './routes/encargado.route.js'
+import ventasRouter from './routes/ventas.route.js'
 import cors from 'cors'
 
 const app = express();
@@ -38,6 +42,10 @@ app.use('/api/v1/Links', linkRouter);
 app.use('/api/v1/questions', questionRouter);
 app.use('/api/v1/aroma', aromaRouter)
 app.use('/api/v1/roles', rolesRouter)
+app.use('/api/v1/productos', productosRouter);
+app.use('/api/v1/paquetes', paquetesRouter);
+app.use('/api/v1/encargados', encargadoRouter);
+app.use('/api/v1/ventas', ventasRouter)
 
 
 //app.use(express.static('public'))

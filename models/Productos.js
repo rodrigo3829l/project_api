@@ -29,6 +29,7 @@ const productosSchema = new Schema({
         type: String,
         require: true,
         trim: true,
+        //enum : ["Jabon", "Desodorante"]
     },
     img:{
         type: String,

@@ -5,7 +5,7 @@ import { bodyPreguntaValidator } from "../middlewares/validatosManager.js";
 
 const router = Router();
 //añade mas preguntas
-router.post('/', requireToken, bodyPreguntaValidator, addQuestion );
+router.post('/',  addQuestion );
 //obtener lista de las preguntas
 router.get('/', getQuestions)
 

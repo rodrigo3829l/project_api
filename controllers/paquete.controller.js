@@ -26,7 +26,7 @@ export const addPaquetes = async (req, res) => {
         let addPaquete = await Paquetes.findOne({nombre});
         if(addPaquete) throw {code: 11000};
     
-        addPaquete = new Pclgquetes ({
+        addPaquete = new Paquetes ({
             nombre,
             descripcion,
             precio,
@@ -66,6 +66,7 @@ export const addNumberPaquetes = async (req, res) =>{
         const tot =Number(paquete.existencia) + numero;
         console.log(tot.toString())
         paquete.existencia = tot.toString();
+        paquete.estado = "Disponible";
         await paquete.save();
         return res.status(200).json({paquete})
     } catch (error) {

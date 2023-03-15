@@ -28,7 +28,12 @@ const ventasSchema = new Schema({
             },
             total : Number
     }],
-    total: Number
+    total: Number,
+    encargadoEntrega: {
+        type: Schema.Types.ObjectId,
+        ref:"encargados",
+        required: true,
+    }
 })
 export const Ventas = model ('Ventas', ventasSchema);
 
@@ -57,6 +62,7 @@ const getVentasSchema = new Schema({
             },
             total : Number
     }],
-    total: Number
+    total: Number,
+    encargadoEntrega: String
 })
 export const GetVentas = model ('GetVentas', getVentasSchema)

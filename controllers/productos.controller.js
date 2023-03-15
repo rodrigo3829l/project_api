@@ -76,3 +76,16 @@ export const getProductos = async (req, res) =>{
         return res.status(500).json({error: 'Error de servidor'})
     }
 }
+
+export const addMoreProducts = async (req, res) =>{
+    const {id, numero} = req.body;
+    try {
+        const producto = await Productos.findById(id);
+        if(!producto) return res.status(400).json({error: "eL producto no existe en la bs"})
+        producto.existencia = (Number(producto.existencia) + numero).toString();
+        await producto.save();
+        res.status(200).json({producto});
+    } catch (error) {
+        console.log(error)
+    }
+}

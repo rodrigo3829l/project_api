@@ -1,4 +1,4 @@
-    import mongoose from "mongoose";
+import mongoose from "mongoose";
 import bcryptjs from 'bcryptjs'
 
 const userSchema = new mongoose.Schema({
@@ -7,6 +7,13 @@ const userSchema = new mongoose.Schema({
     apm : String,
     fechaNacimiento: Date,
     numCasa : String,
+    direccion : [{
+        calle : String,
+        colonia : String,
+        ciudad : String,
+        estado : String,
+        cp : String
+    }],
     userName : {
         type: String,
         required: true,
@@ -26,6 +33,13 @@ const userSchema = new mongoose.Schema({
         trim: true,
         index : {unique : true},
     },
+    sexo : {
+        type: String,
+        enum : ["Masculino", "Femenino"]
+    },
+    pregunta : String,
+    respuesta : String,
+    img: String,
 });
 
 userSchema.pre("save", async function( next ){

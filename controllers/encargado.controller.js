@@ -1,11 +1,11 @@
 import { Encargado } from "../models/EncaradoEntrega.js";
 
 export const addEncargado = async (req, res) =>{
-    const {idUsuario, estado} = req.body;
+    const {idUsuario} = req.body;
     try {
         let encargado = await Encargado.findOne({idUsuario});
         if (encargado) throw {code: 1100};
-        encargado = new Encargado({idUsuario, estado});
+        encargado = new Encargado({idUsuario, estado: "Disponible"});
         const newEncargado = await encargado.save();
         return res.status(201).json({newEncargado})
     } catch (error) {
@@ -44,6 +44,17 @@ export const delEncargado = async (req, res) => {
         return res.json({ encargado })
     } catch (error) {
         console.log(error)
+        return res.status(500).json({ error: 'Algo fallo en el servidor o la base de datos' })
+    }
+}
+
+export const getEcargadoDisp = async (req, res) => {
+    try {
+        const encargados = await Encargado.find({estado : "Disponible"});
+        if (!encargados) return res.status(400).json({error: "No hay pa"});
+        return res.status(200).json({encargados})
+    } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: 'Algo fallo en el servidor o la base de datos' })
     }
 }

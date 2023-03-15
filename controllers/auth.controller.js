@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken'
 import { generateRefreshToken, generateToken, TokenVerificationErrors } from "../utils/tokenManager.js";
 
 export const register = async (req, res) => {     
-    const {name, app, apm, fechaNacimiento, numCasa, userName, password, celphone, email} = req.body;
+    const {name, app, apm, fechaNacimiento, numCasa, direccion, userName, password, celphone, email, sexo, pregunta, respuesta, img} = req.body;
     try {
-        let user = await User.findOne({email});
+        let user = await User.findOne({userName});
         if(user) throw {code: 11000};
 
         user = new User({
@@ -14,10 +14,15 @@ export const register = async (req, res) => {
             apm,
             fechaNacimiento,
             numCasa,
+            direccion,
             userName,
             password,
             celphone,
-            email
+            email,
+            sexo, 
+            pregunta, 
+            respuesta,
+            img
         });
 
         
@@ -97,7 +102,8 @@ export const getUsers = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const {id} = req.params;
-        const {name, app, apm, fechaNacimiento, numCasa, userName, password, celphone, email} = req.body;
+        const {name, app, apm, fechaNacimiento, numCasa, direccion, 
+            userName, password, celphone, email, sexo, pregunta, respuesta, img} = req.body;
 
         const user = await User.findById(id);
 
@@ -113,6 +119,11 @@ export const updateUser = async (req, res) => {
         user.password = password;
         user.celphone = celphone;
         user.email= email;
+        user.direccion = direccion;
+        user.sexo =  sexo,
+        user.pregunta = pregunta;
+        user.respuesta = respuesta;
+        user.img = img;
         
         await user.save();
 

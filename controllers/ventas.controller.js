@@ -1,6 +1,8 @@
+import { Encargado } from "../models/EncaradoEntrega.js";
 import { Paquetes } from "../models/Paquete.js";
 import { User } from "../models/Users.js";
 import { GetVentas, Ventas } from "../models/Ventas.js";
+import { getEcargadoDisp } from "./encargado.controller.js";
 
 export const addVenta = async (req, res) => {
     const {idUsuario, paquetes} = req.body;
@@ -21,23 +23,30 @@ export const addVenta = async (req, res) => {
         let i;
         for ( i = 0 ;  i < paquetes.length; i++){
             const paquete = await Paquetes.findById(paquetes[i].idPaquete);
+            if(!paquete) return res.status(400).json({error: "No existe el producto"});
             paquetes[i].total = paquete.precio * paquetes[i].cantidad
             if(paquete.existencia <  paquetes[i].cantidad) return res.status(400).json({error: `No se concreto la venta, paquete ${paquete.nombre} insuficiente, cantidad en stock: ${paquete.existencia}`});
             paquete.existencia =  (Number(paquete.existencia) - paquetes[i].cantidad).toString();
             if(paquete.existencia === "0") paquete.estado = "No disponible"
             totalPaqs = totalPaqs + Number(paquetes[i].total);
-            await paquete.save();
-          }          
-        const paq = paquetes
+            //await paquete.save();
+          }     
+             
+        const user = await User.findById(idUsuario);
+        if(!user) return res.status(400).json({error: "El usuario no existe"}); 
+        const encargados = await Encargado.find({estado: "Disponible"})
+        console.log(encargados)
+        const paq = paquetes;
         const venta = new Ventas({
             fecha : fechaFormateada,
             hora : horaFormateada,
             idUsuario, 
             paquetes : paq,
             total:totalPaqs,
+            encargadoEntrega : encargados[0]._id
         })
-        const newVenta = await venta.save();
-        return res.status(200).json({newVenta})
+        //const newVenta = await venta.save();
+        return res.status(200).json({venta})
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
@@ -53,7 +62,8 @@ export const getVentaForId = async (req, res) =>{
             hora,
             idUsuario,
             paquetes,
-            total
+            total,
+            encargadoEntrega,
         } = await Ventas.findById(id);
         //console.log(idUsuario.toString())
         const user = await User.findById(idUsuario.toString());
@@ -70,12 +80,14 @@ export const getVentaForId = async (req, res) =>{
             }
             getPaquetes.push(addPaq);
         }
+        const encargado = await Encargado
         const getventa = new GetVentas ({
             fecha,
             hora,
             usuario : userName,
             paquetes : getPaquetes,
             total,
+            encargadoEntrega,
             _id : id,
         });
         console.log(getventa)

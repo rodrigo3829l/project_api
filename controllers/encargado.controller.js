@@ -1,4 +1,5 @@
-import { Encargado } from "../models/EncaradoEntrega.js";
+import { Encargado, GetEncargado } from "../models/EncaradoEntrega.js";
+import { User } from "../models/Users.js";
 
 export const addEncargado = async (req, res) =>{
     const {idUsuario} = req.body;
@@ -50,9 +51,21 @@ export const delEncargado = async (req, res) => {
 
 export const getEcargadoDisp = async (req, res) => {
     try {
-        const encargados = await Encargado.find({estado : "Disponible"});
+        const encargados = await Encargado.find();
         if (!encargados) return res.status(400).json({error: "No hay pa"});
-        return res.status(200).json({encargados})
+        let enca = [];
+        let i;
+        for ( i = 0 ; i < encargados.length; i ++){
+            const user = await User.findById(encargados[i].idUsuario.toString());
+            const newEncargado = new GetEncargado({
+                usuario : user.name + " " + user.app + " " + user.apm,
+                estado: encargados[i].estado,
+                paquetes: encargados[i].paquetes,
+                telefono: user.celphone
+            })
+            enca.push(newEncargado)
+        }
+        return res.status(200).json({enca})
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Algo fallo en el servidor o la base de datos' })

@@ -2,7 +2,6 @@ import { Encargado } from "../models/EncaradoEntrega.js";
 import { Paquetes } from "../models/Paquete.js";
 import { User } from "../models/Users.js";
 import { GetVentas, Ventas } from "../models/Ventas.js";
-import { getEcargadoDisp } from "./encargado.controller.js";
 
 export const addVenta = async (req, res) => {
     const {idUsuario, paquetes} = req.body;
@@ -29,24 +28,32 @@ export const addVenta = async (req, res) => {
             paquete.existencia =  (Number(paquete.existencia) - paquetes[i].cantidad).toString();
             if(paquete.existencia === "0") paquete.estado = "No disponible"
             totalPaqs = totalPaqs + Number(paquetes[i].total);
-            //await paquete.save();
+            await paquete.save();
           }     
              
         const user = await User.findById(idUsuario);
         if(!user) return res.status(400).json({error: "El usuario no existe"}); 
         const encargados = await Encargado.find({estado: "Disponible"})
-        console.log(encargados)
+
+        let numAleatorio = Math.floor(Math.random() * encargados.length); // Genera un número aleatorio entre 0 y 5
+        console.log(numAleatorio); // Muestra el número aleatorio generado en la consola
+
+        encargados[numAleatorio].paquetes = encargados[numAleatorio].paquetes - 1;
+        if(encargados[numAleatorio].paquetes === 0){
+          encargados[numAleatorio].estado = "No disponible"
+        }
         const paq = paquetes;
         const venta = new Ventas({
-            fecha : fechaFormateada,
-            hora : horaFormateada,
-            idUsuario, 
-            paquetes : paq,
-            total:totalPaqs,
-            encargadoEntrega : encargados[0]._id
+          fecha : fechaFormateada,
+          hora : horaFormateada,
+          idUsuario, 
+          paquetes : paq,
+          total:totalPaqs,
+          encargadoEntrega : encargados[numAleatorio]._id
         })
-        //const newVenta = await venta.save();
-        return res.status(200).json({venta})
+        const newVenta = await venta.save();
+        await encargados[numAleatorio].save();
+        return res.status(200).json({newVenta})
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
@@ -55,7 +62,6 @@ export const addVenta = async (req, res) => {
 
 export const getVentaForId = async (req, res) =>{
     const {id} = req.params;
-    console.log(id)
     try {
         const {
             fecha,
@@ -64,6 +70,7 @@ export const getVentaForId = async (req, res) =>{
             paquetes,
             total,
             encargadoEntrega,
+            estado
         } = await Ventas.findById(id);
         //console.log(idUsuario.toString())
         const user = await User.findById(idUsuario.toString());
@@ -80,61 +87,76 @@ export const getVentaForId = async (req, res) =>{
             }
             getPaquetes.push(addPaq);
         }
-        const encargado = await Encargado
+        const encargado = await Encargado.findById(encargadoEntrega.toString());
+        const enca = await User.findById(encargado.idUsuario.toString());
+        //console.log(encargadoEntrega)
         const getventa = new GetVentas ({
             fecha,
             hora,
             usuario : userName,
             paquetes : getPaquetes,
             total,
-            encargadoEntrega,
+            encargadoEntrega : enca.name + " " + enca.apm + " " + enca.apm,
             _id : id,
+            estado
         });
-        console.log(getventa)
+        return res.status(200).json(getventa);
     } catch (error) {
         console.log("error \n" + error)
     }
 }
 
 export const getVentaForDate = async (req, res) =>{
-    const {fechaParam} = req.params;
-    console.log(fechaParam);
+  const { fecha } = req.body;
+  try {
+      const ventas = await Ventas.find({ fecha });
+      const getventas = [];
+      for (let i = 0; i < ventas.length; i++) {
+          const {
+              fecha,
+              hora,
+              idUsuario,
+              paquetes,
+              total,
+              encargadoEntrega,
+              estado
+          } = ventas[i];
 
-    try {
-        const {
-            fecha,
-            hora,
-            idUsuario,
-            paquetes,
-            total
-        } = await Ventas.findOne({ fechaParam });
+          const user = await User.findById(idUsuario.toString());
+          const userName = (user.name + " " + user.app + " " + user.apm);
 
-        const user = await User.findById(idUsuario.toString());
-        const userName = (user.name + " " + user.app + " " + user.apm);
-        let getPaquetes = [];
-        let i ;
-        for ( i = 0; i < paquetes.length; i++){
-            const paq = await Paquetes.findById(paquetes[i].idPaquete);
-            console.log(paq.nombre);
-            const addPaq = {
-                paquete: paq.nombre,
-                cantidad : paquetes[0].cantidad,
-                total: paquetes[0].total,
-            }
-            getPaquetes.push(addPaq);
-        }
-        const getventa = new GetVentas ({
-            fecha,
-            hora,
-            usuario : userName,
-            paquetes : getPaquetes,
-            total,
-        });
-        return  res.status(200).json({getventa})
-    } catch (error) {
-        console.log("error \n" + error)
-    }
+          let getPaquetes = [];
+          for (let j = 0; j < paquetes.length; j++) {
+              const paq = await Paquetes.findById(paquetes[j].idPaquete);
+              const addPaq = {
+                  paquete: paq.nombre,
+                  cantidad : paquetes[j].cantidad,
+                  total: paquetes[j].total,
+              }
+              getPaquetes.push(addPaq);
+          }
+
+          const encargado = await Encargado.findById(encargadoEntrega.toString());
+          const enca = await User.findById(encargado.idUsuario.toString());
+
+          const getventa = new GetVentas ({
+              fecha,
+              hora,
+              usuario : userName,
+              paquetes : getPaquetes,
+              total,
+              encargadoEntrega: enca.name + " " + enca.app + " " + enca.apm,
+              estado
+          });
+          getventas.push(getventa);
+      }
+      return res.status(200).json({ getventas });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
+  }
 }
+
 export const getVentasEntreHoras = async (req, res) => {
     const { horaInicio, horaFin } = req.body;
     console.log(`Hora inicio: ${horaInicio}, hora fin: ${horaFin}`);
@@ -155,6 +177,11 @@ export const getVentasEntreHoras = async (req, res) => {
             total: paquete.total
           };
         }));
+        //console.log()
+        const enc = await Encargado.findById(venta.encargadoEntrega.toString());
+        //console.log();
+        const usuario = await User.findById(enc.idUsuario.toString());
+        
   
         const getVenta = new GetVentas({
           fecha: venta.fecha,
@@ -162,7 +189,9 @@ export const getVentasEntreHoras = async (req, res) => {
           usuario: userName,
           paquetes: getPaquetes,
           total: venta.total,
-          _id: venta._id
+          _id: venta._id,
+          estado: venta.estado,
+          encargadoEntrega: usuario.name + " " + usuario.app + " " + usuario.apm,
         });
   
         getVentas.push(getVenta);
@@ -201,6 +230,11 @@ export const getVentasEntreHoras = async (req, res) => {
             total: paquete.total
           };
         }));
+
+        //console.log()
+        const enc = await Encargado.findById(venta.encargadoEntrega.toString());
+        //console.log();
+        const usuario = await User.findById(enc.idUsuario.toString());
   
         const getVenta = new GetVentas({
           fecha: venta.fecha,
@@ -208,7 +242,9 @@ export const getVentasEntreHoras = async (req, res) => {
           usuario: userName,
           paquetes: getPaquetes,
           total: venta.total,
-          _id: venta._id
+          _id: venta._id,
+          estado: venta.estado,
+          encargadoEntrega: usuario.name + " " + usuario.app + " " + usuario.apm,
         });
   
         getVentas.push(getVenta);
@@ -220,6 +256,21 @@ export const getVentasEntreHoras = async (req, res) => {
       res.status(500).json({
         message: 'Error al buscar las ventas por fecha y hora'
       });
+    }
+  }
+  export const updateStateForSale = async (req, res) => {
+    const {id} = req.body;
+    try {
+      const venta = await Ventas.findById(id);
+      const user = await Encargado.findById(venta.encargadoEntrega.toString())
+      user.estado = "Disponible";
+      user.paquetes = user.paquetes + 1;
+      await user.save();
+      venta.estado = "Entregado";
+      await venta.save();
+      return res.status(200).json({actVenta : venta, actUser: user})
+    } catch (error) {
+      console.log(error);
     }
   }
   

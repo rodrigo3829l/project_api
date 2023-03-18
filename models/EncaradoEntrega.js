@@ -13,7 +13,8 @@ const encargadoSchema = new Schema({
         type: String,
         required : true,
         enum : ['Disponible', 'No disponible']
-    }
+    },
+    paquetes : Number
 });
 
 export const Encargado = model('Encargado', encargadoSchema);

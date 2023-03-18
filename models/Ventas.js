@@ -33,6 +33,10 @@ const ventasSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:"encargados",
         required: true,
+    },
+    estado: {
+        type: String,
+        enum : [ 'Entregado', 'No entregado']
     }
 })
 export const Ventas = model ('Ventas', ventasSchema);
@@ -63,6 +67,10 @@ const getVentasSchema = new Schema({
             total : Number
     }],
     total: Number,
-    encargadoEntrega: String
+    encargadoEntrega: String,
+    estado: {
+        type: String,
+        enum : [ 'Entregado', 'No entregado']
+    }
 })
 export const GetVentas = model ('GetVentas', getVentasSchema)

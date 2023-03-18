@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
     pregunta : String,
     respuesta : String,
     img: String,
+    tipo: {
+        type : String,
+        enum : ['Admin', 'User', 'Gerent', 'Reparter']
+    }
 });
 
 userSchema.pre("save", async function( next ){

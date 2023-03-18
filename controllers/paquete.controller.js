@@ -70,7 +70,8 @@ export const addNumberPaquetes = async (req, res) =>{
         await paquete.save();
         return res.status(200).json({paquete})
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        return res.status(400).json({error: "Error de servidor"})
     }
 }
 export const getPaquetes = async (req, res) => {

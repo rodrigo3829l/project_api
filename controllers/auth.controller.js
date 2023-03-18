@@ -3,7 +3,9 @@ import jwt from 'jsonwebtoken'
 import { generateRefreshToken, generateToken, TokenVerificationErrors } from "../utils/tokenManager.js";
 
 export const register = async (req, res) => {     
-    const {name, app, apm, fechaNacimiento, numCasa, direccion, userName, password, celphone, email, sexo, pregunta, respuesta, img} = req.body;
+    const {name, app, apm, fechaNacimiento, numCasa,
+         direccion, userName, password, celphone, 
+         email, sexo, pregunta, respuesta, img, tipo} = req.body;
     try {
         let user = await User.findOne({userName});
         if(user) throw {code: 11000};
@@ -22,7 +24,8 @@ export const register = async (req, res) => {
             sexo, 
             pregunta, 
             respuesta,
-            img
+            img,
+            tipo
         });
 
         
@@ -33,7 +36,7 @@ export const register = async (req, res) => {
 
         return res.status(201).json({token, expiresIn});
     } catch (error) {
-        //console.log(error)
+        console.log(error)
         if(error.code === 11000){
             return res.status(400).json({error: 'Ya existe el usuario, o el correo'})
         }
@@ -103,7 +106,7 @@ export const updateUser = async (req, res) => {
     try {
         const {id} = req.params;
         const {name, app, apm, fechaNacimiento, numCasa, direccion, 
-            userName, password, celphone, email, sexo, pregunta, respuesta, img} = req.body;
+            userName, celphone, email, sexo, img} = req.body;
 
         const user = await User.findById(id);
 
@@ -116,13 +119,10 @@ export const updateUser = async (req, res) => {
         user.userName= userName;
         user.fechaNacimiento = fechaNacimiento;
         user.numCasa = numCasa;
-        user.password = password;
         user.celphone = celphone;
         user.email= email;
         user.direccion = direccion;
-        user.sexo =  sexo,
-        user.pregunta = pregunta;
-        user.respuesta = respuesta;
+        user.sexo =  sexo;
         user.img = img;
         
         await user.save();

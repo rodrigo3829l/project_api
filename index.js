@@ -20,16 +20,16 @@ console.log("Hola bd => " , process.env.URI_MONGO);
 
 const whiteList = [process.env.ORIGIN1, process.env.ORIGIN2]
 
-// app.use(
-//     cors({
-//         origin: function (origin, callback){
-//             console.log("HOla origin => ", origin)
-//             if(!origin || whiteList.includes(origin)){
-//                 return callback(null, origin);
-//             }
-//             return callback("Error de corse origin: " + origin + " no autorizado")
-//         }
-// }))
+app.use(
+    cors({
+        origin: function (origin, callback){
+            console.log("HOla origin => ", origin)
+            if(!origin || whiteList.includes(origin)){
+                return callback(null, origin);
+            }
+            return callback("Error de corse origin: " + origin + " no autorizado")
+        }
+}))
 
 app.use(express.json());
 app.use(cookieParser())

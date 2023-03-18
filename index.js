@@ -28,7 +28,8 @@ app.use(
                 return callback(null, origin);
             }
             return callback("Error de corse origin: " + origin + " no autorizado")
-        }
+        },
+        credentials: true,
 }))
 
 app.use(express.json());

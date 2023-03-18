@@ -35,7 +35,6 @@ export const addPaquetes = async (req, res) => {
             existencia,
             estado
         });
-        console.log(addPaquete)
           
         const newPaquete = await addPaquete.save();
         console.log(newPaquete)
@@ -175,8 +174,6 @@ export const updatePaquete = async (req, res) =>{
         uppPaq.productos = productoIds;
         uppPaq.existencia = existencia;
         uppPaq.estado = estado;
-        console.log("==============")
-        console.log(uppPaq)
         await uppPaq.save();
         return res.json({uppPaq})
     } catch (error) {

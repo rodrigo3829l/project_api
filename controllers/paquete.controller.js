@@ -10,7 +10,6 @@ export const addPaquetes = async (req, res) => {
             img,
             productos,
             existencia,
-            estado,
         } = req.body;
 
         const productosId = productos.map(item => item.id_producto);
@@ -33,7 +32,7 @@ export const addPaquetes = async (req, res) => {
             img,
             productos : productosId,
             existencia,
-            estado
+            estado: "Disponible"
         });
           
         const newPaquete = await addPaquete.save();

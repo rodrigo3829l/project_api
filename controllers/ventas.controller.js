@@ -157,6 +157,56 @@ export const getVentaForDate = async (req, res) =>{
   }
 }
 
+export const getVentas = async (req, res) =>{
+  try {
+      const ventas = await Ventas.find();
+      const getventas = [];
+      for (let i = 0; i < ventas.length; i++) {
+          const {
+              fecha,
+              hora,
+              idUsuario,
+              paquetes,
+              total,
+              encargadoEntrega,
+              estado
+          } = ventas[i];
+
+          const user = await User.findById(idUsuario.toString());
+          const userName = (user.name + " " + user.app + " " + user.apm);
+
+          let getPaquetes = [];
+          for (let j = 0; j < paquetes.length; j++) {
+              const paq = await Paquetes.findById(paquetes[j].idPaquete);
+              const addPaq = {
+                  paquete: paq.nombre,
+                  cantidad : paquetes[j].cantidad,
+                  total: paquetes[j].total,
+              }
+              getPaquetes.push(addPaq);
+          }
+
+          const encargado = await Encargado.findById(encargadoEntrega.toString());
+          const enca = await User.findById(encargado.idUsuario.toString());
+
+          const getventa = new GetVentas ({
+              fecha,
+              hora,
+              usuario : userName,
+              paquetes : getPaquetes,
+              total,
+              encargadoEntrega: enca.name + " " + enca.app + " " + enca.apm,
+              estado
+          });
+          getventas.push(getventa);
+      }
+      return res.status(200).json({ getventas });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
+  }
+}
+
 export const getVentasEntreHoras = async (req, res) => {
     const { horaInicio, horaFin } = req.body;
     console.log(`Hora inicio: ${horaInicio}, hora fin: ${horaFin}`);

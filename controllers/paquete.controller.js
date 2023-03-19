@@ -86,6 +86,7 @@ export const getPaquetes = async (req, res) => {
                 productos,
                 existencia,
                 estado,
+                _id
             } = await Paquetes.findById(paquetes[i].id);
             let getProductos = [];
             let j;
@@ -102,6 +103,7 @@ export const getPaquetes = async (req, res) => {
                 productos : getProductos,
                 existencia,
                 estado,
+                _id
             })
             getPaquetes.push(getPaquete);
         }
@@ -124,6 +126,7 @@ export const getPaquete = async (req, res) => {
             productos,
             existencia,
             estado,
+            _id
         } = await Paquetes.findById(id);
         let getProductos = [];
         let i
@@ -141,6 +144,7 @@ export const getPaquete = async (req, res) => {
             productos : getProductos,
             existencia,
             estado,
+            _id
         })
         return res.status(201).json({getPaquete});
     } catch (error) {

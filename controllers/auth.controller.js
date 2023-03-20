@@ -149,3 +149,15 @@ export const removeUser = async (req, res) =>{
         res.status(500).json({error: 'error de servidor'});
     }
 }
+
+
+export const forgetPswd = async (req, res) =>{
+    const {userName, email} = req.body;
+    try {
+        const user = await User.findOne({userName: userName, email: email});
+        if(!user) return res.status(400).json({error: 'Usuario o email incorrectos'});
+        return res.status(200).json({user})
+    } catch (error) {
+        console.log(error)
+    }
+}

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser} from "../controllers/auth.controller.js";
+import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd} from "../controllers/auth.controller.js";
 import { requireToken } from "../middlewares/requireToken.js";
 import { requireRefreshToken } from "../middlewares/requireRefreshToken.js";
 import { bodyLoginVlidator, bodyRegisterValidator, bodyUpdateValidator, paramLinkValidator } from "../middlewares/validatosManager.js";
@@ -21,5 +21,7 @@ router.get('/logout', logout)
 router.patch('/:id', updateUser)
 //Elimina un usuario
 router.delete('/:id', removeUser)
+
+router.post('/forget', forgetPswd)
 
 export default router;

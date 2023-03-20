@@ -12,7 +12,7 @@ export const addEncargado = async (req, res) =>{
     } catch (error) {
         console.log(error);
         if(error.code === 11000){
-            return res.status(400).json({error: 'Ya existe el aroma'})
+            return res.status(400).json({error: 'Ya existe el encargado'})
         }
         return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
     }

@@ -43,6 +43,17 @@ export const register = async (req, res) => {
         return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
     }
 }
+
+export const getUserForId = async (req, res) =>{
+    const {id} = req.params;
+    try {
+        const user = await User.findById(id)
+        if (!user) return res.status(400).json({error: 'Este usuario no existe'});
+        return res.status(200).json({user}) 
+    } catch (error) {
+        console.log(error)
+    }
+}
 export const login = async (req, res) => {
     try {
         const { userName, password } = req.body;
@@ -158,6 +169,7 @@ export const forgetPswd = async (req, res) =>{
         if(!user) return res.status(400).json({error: 'Usuario o email incorrectos'});
         return res.status(200).json({user})
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        return res.status(500).json({error :"Error en el servidor o la bd"})
     }
 }

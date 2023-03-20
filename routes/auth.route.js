@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd} from "../controllers/auth.controller.js";
+import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId} from "../controllers/auth.controller.js";
 import { requireToken } from "../middlewares/requireToken.js";
 import { requireRefreshToken } from "../middlewares/requireRefreshToken.js";
 import { bodyLoginVlidator, bodyRegisterValidator, bodyUpdateValidator, paramLinkValidator } from "../middlewares/validatosManager.js";
@@ -23,5 +23,7 @@ router.patch('/:id', updateUser)
 router.delete('/:id', removeUser)
 
 router.post('/forget', forgetPswd)
+
+router.get('/:id', getUserForId)
 
 export default router;

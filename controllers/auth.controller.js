@@ -15,17 +15,17 @@ export const register = async (req, res) => {
             app,
             apm,
             fechaNacimiento,
-            numCasa,
-            direccion,
+            numCasa,//
+            direccion,//
             userName,
             password,
             celphone,
             email,
-            sexo, 
-            pregunta, 
-            respuesta,
+            sexo, //
+            pregunta,// 
+            respuesta,//
             img,
-            tipo
+            tipo//
         });
 
         

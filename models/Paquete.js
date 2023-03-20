@@ -73,6 +73,7 @@ const getPaqueteSchema = new Schema({
             type: String,
             require: true,
     }],
+    
     existencia :{
         type: String,
         required : true,

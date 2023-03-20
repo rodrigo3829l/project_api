@@ -16,6 +16,7 @@ export const addPaquetes = async (req, res) => {
         let i;
         for (i = 0; i < productosId.length; i++){
             const producto = await Productos.findById(productosId[i]);
+            console.log(producto)
             const exis = Number( producto.existencia);
             if(exis < existencia)  return res.status(401).json({error:'No hay suficientes productos para agregar esta ccantidad de paquetes: Productos => ' + exis})
             producto.existencia = exis - existencia;

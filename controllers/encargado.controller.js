@@ -6,7 +6,7 @@ export const addEncargado = async (req, res) =>{
     try {
         let encargado = await Encargado.findOne({idUsuario});
         if (encargado) throw {code: 1100};
-        encargado = new Encargado({idUsuario, estado: "Disponible", paquetes : 0});
+        encargado = new Encargado({idUsuario, estado: "Disponible", paquetes : 10});
         const newEncargado = await encargado.save();
         return res.status(201).json({newEncargado})
     } catch (error) {

@@ -21,9 +21,8 @@ const paqueteSchema = new Schema({
         trim : true,
     },
     img:{
-        type: String,
-        require: true,
-        trim: true
+        public_id: String,
+        secure_url: String
     },
     productos : [{
             type: Schema.Types.ObjectId,

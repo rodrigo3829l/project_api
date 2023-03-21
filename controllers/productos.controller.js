@@ -1,5 +1,42 @@
 import { Aroma } from "../models/Aroma.js";
 import { GetProductos, Productos } from "../models/Productos.js";
+import {uploadImage, deleteImage} from '../utils/cloudinary.js'
+import fs from 'fs-extra';
+
+
+
+export const addProductImg = async (req, res) => {
+    const  {nombre, descripcion, aroma, existencia, tipo} = req.body;
+    //console.log(aroma)
+
+    try {
+        const newProduct = new Productos ({
+            nombre,
+            descripcion,
+            aroma ,
+            existencia,
+            tipo,
+        });
+        if(req.files?.img){
+            const {public_id, secure_url} = await uploadImage(req.files.img.tempFilePath)
+            newProduct.img ={
+                public_id,
+                secure_url
+            }
+            fs.unlink(req.files.img.tempFilePath)
+        }
+        //console.log(newProduct)
+
+        //const añadeProduct = await newProduct.save();
+        return res.status(201).json({newProduct});
+    } catch (error) {
+        console.log(error)
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Ya existe el producto' });
+        }
+        return res.status(500).json({ error: 'Algo fallo en el servidor o la base de datos' });
+    }
+}
 
 export const addProduct = async (req, res) => {
     const  {nombre, descripcion, aroma, existencia, tipo, img} = req.body;

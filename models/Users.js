@@ -39,7 +39,10 @@ const userSchema = new mongoose.Schema({
     },
     pregunta : String,
     respuesta : String,
-    img: String,
+    img:{
+        public_id: String,
+        secure_url: String
+    },
     tipo: {
         type : String,
         enum : ['Admin', 'User', 'Gerent', 'Reparter']

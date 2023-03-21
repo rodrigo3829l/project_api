@@ -2,6 +2,8 @@ import { Encargado } from "../models/EncaradoEntrega.js";
 import { Paquetes } from "../models/Paquete.js";
 import { User } from "../models/Users.js";
 import { GetVentas, Ventas } from "../models/Ventas.js";
+import {uploadImage, deleteImage} from '../utils/cloudinary.js'
+import fs from 'fs-extra';
 
 export const addVenta = async (req, res) => {
     const {idUsuario, paquetes} = req.body;

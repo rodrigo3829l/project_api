@@ -116,8 +116,9 @@ export const getUsers = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const {id} = req.params;
-        const {name, app, apm, fechaNacimiento, numCasa, direccion, 
-            userName, celphone, email, sexo, img} = req.body;
+        const {name, app, apm, fechaNacimiento, numCasa,
+            direccion, userName, password, celphone, 
+            email, sexo, pregunta, respuesta, img, tipo} = req.body;
 
         const user = await User.findById(id);
 
@@ -135,6 +136,10 @@ export const updateUser = async (req, res) => {
         user.direccion = direccion;
         user.sexo =  sexo;
         user.img = img;
+        user.pregunta = pregunta,
+        user.respuesta= respuesta,
+        user.password = password,
+        user.tipo = tipo
         
         await user.save();
 

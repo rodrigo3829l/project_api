@@ -70,7 +70,7 @@ export const getVentaForId = async (req, res) =>{
             paquetes,
             total,
             encargadoEntrega,
-            estado
+            estado,
         } = await Ventas.findById(id);
         //console.log(idUsuario.toString())
         const user = await User.findById(idUsuario.toString());
@@ -103,6 +103,7 @@ export const getVentaForId = async (req, res) =>{
         return res.status(200).json(getventa);
     } catch (error) {
         console.log("error \n" + error)
+        return res.status(500).json({error: 'Error en el servidor o la bd'})
     }
 }
 
@@ -169,7 +170,8 @@ export const getVentas = async (req, res) =>{
               paquetes,
               total,
               encargadoEntrega,
-              estado
+              estado,
+              _id
           } = ventas[i];
 
           const user = await User.findById(idUsuario.toString());
@@ -196,7 +198,8 @@ export const getVentas = async (req, res) =>{
               paquetes : getPaquetes,
               total,
               encargadoEntrega: enca.name + " " + enca.app + " " + enca.apm,
-              estado
+              estado,
+              _id
           });
           getventas.push(getventa);
       }

@@ -5,7 +5,7 @@ import { requireToken } from "../middlewares/requireToken.js";
 
 
 const router = Router();
-router.post('/', fileUpload({useTempFiles: true, tempFileDir: './uplloads'}) , addProductImg);
+router.post('/', fileUpload({useTempFiles: true, tempFileDir: './uplloads'}) , addProduct);
 router.get('/:id', getProducto);
 router.get('/', getProductos);
 router.post('/add/', addMoreProducts);

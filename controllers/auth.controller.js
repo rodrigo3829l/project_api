@@ -1,11 +1,12 @@
 import { User } from "../models/Users.js";
 import jwt from 'jsonwebtoken'
 import { generateRefreshToken, generateToken, TokenVerificationErrors } from "../utils/tokenManager.js";
+import {uploadImage, deleteImage} from '../utils/cloudinary.js'
 
 export const register = async (req, res) => {     
     const {name, app, apm, fechaNacimiento, numCasa,
          direccion, userName, password, celphone, 
-         email, sexo, pregunta, respuesta, img, tipo} = req.body;
+         email, sexo, pregunta, respuesta, tipo} = req.body;
     try {
         let user = await User.findOne({userName});
         if(user) throw {code: 11000};
@@ -24,16 +25,23 @@ export const register = async (req, res) => {
             sexo, //
             pregunta,// 
             respuesta,//
-            img,
             tipo//
         });
+        if(req.files?.img){
+            const {public_id, secure_url} = await uploadImage(req.files.img.tempFilePath)
+            user.img ={
+                public_id,
+                secure_url  
+            }
+            fs.unlink(req.files.img.tempFilePath)
+        }
 
         
-        await user.save();
+        //await user.save();
         //jwt token 
         const {token, expiresIn} = generateToken(user.id);  
         generateRefreshToken(user.id, res)
-
+        console.log(user)
         return res.status(201).json({token, expiresIn});
     } catch (error) {
         console.log(error)

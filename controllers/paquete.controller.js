@@ -1,13 +1,12 @@
 import { GetPaquetes, Paquetes } from "../models/Paquete.js";
 import { Productos } from "../models/Productos.js";
-
+import {uploadImage, deleteImage} from '../utils/cloudinary.js'
 export const addPaquetes = async (req, res) => {
     try {
         const {
             nombre,
             descripcion,
             precio,
-            img,
             productos,
             existencia,
         } = req.body;
@@ -30,15 +29,22 @@ export const addPaquetes = async (req, res) => {
             nombre,
             descripcion,
             precio,
-            img,
             productos : productosId,
             existencia,
             estado: "Disponible"
         });
+        if(req.files?.img){
+            const {public_id, secure_url} = await uploadImage(req.files.img.tempFilePath)
+            addPaquete.img ={
+                public_id,
+                secure_url  
+            }
+            fs.unlink(req.files.img.tempFilePath)
+        }
           
-        const newPaquete = await addPaquete.save();
-        console.log(newPaquete)
-        return res.status(201).json({newPaquete});
+        //const newPaquete = await addPaquete.save();
+        console.log(addPaquete)
+        return res.status(201).json({addPaquete});
     } catch (error) {
         console.log(error)
         if(error.code === 11000){

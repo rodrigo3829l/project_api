@@ -21,7 +21,7 @@ export const addProductImg = async (req, res) => {
             const {public_id, secure_url} = await uploadImage(req.files.img.tempFilePath)
             newProduct.img ={
                 public_id,
-                secure_url
+                secure_url  
             }
             fs.unlink(req.files.img.tempFilePath)
         }
@@ -39,9 +39,7 @@ export const addProductImg = async (req, res) => {
 }
 
 export const addProduct = async (req, res) => {
-    const  {nombre, descripcion, aroma, existencia, tipo, img} = req.body;
-    console.log(aroma)
-
+    const  {nombre, descripcion, aroma, existencia, tipo} = req.body;
     try {
         let newProduct = await Productos.findOne({nombre});
         if(newProduct) throw {code: 11000};
@@ -52,13 +50,21 @@ export const addProduct = async (req, res) => {
             aroma ,
             existencia,
             tipo,
-            img,
         });
         console.log(newProduct)
+        if(req.files?.img){
+            const {public_id, secure_url} = await uploadImage(req.files.img.tempFilePath)
+            newProduct.img ={
+                public_id,
+                secure_url  
+            }
+            fs.unlink(req.files.img.tempFilePath)
+        }
 
-        const añadeProduct = await newProduct.save();
-        return res.status(201).json({añadeProduct});
+        //const añadeProduct = await newProduct.save();
+        return res.status(201).json({newProduct});
     } catch (error) {
+        console.log(error)
         if (error.code === 11000) {
             return res.status(400).json({ error: 'Ya existe el producto' });
         }

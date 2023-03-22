@@ -8,6 +8,7 @@ export const register = async (req, res) => {
          direccion, userName, password, celphone, 
          email, sexo, pregunta, respuesta, tipo} = req.body;
     try {
+        console.log(req.files)
         let user = await User.findOne({userName});
         if(user) throw {code: 11000};
 
@@ -38,6 +39,60 @@ export const register = async (req, res) => {
 
         
         //await user.save();
+        //jwt token 
+        //const {token, expiresIn} = generateToken(user.id);  
+        //generateRefreshToken(user.id, res)
+        //console.log(user)
+        //return res.status(201).json({token, expiresIn});
+    } catch (error) {
+        console.log(error)
+        if(error.code === 11000){
+            return res.status(400).json({error: 'Ya existe el usuario, o el correo'})
+        }
+        return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
+    }
+}
+
+export const registerUser = async (req, res) => {     
+    const {name, app, apm, userName, password, email, pregunta, respuesta, tipo} = req.body;
+    try {
+        console.log(req.files)
+        let user = await User.findOne({userName});
+        if(user) throw {code: 11000};
+
+        user = new User({
+            name,
+            app,
+            apm,
+            fechaNacimiento : null,
+            numCasa : null,
+            direccion : [
+                {
+                    calle: null,
+                    colonia: null,
+                    estado: null,
+                    cp: null
+                }
+            ],
+            userName,
+            password,
+            celphone : null,
+            email,
+            sexo : null,
+            pregunta,// 
+            respuesta,//s
+            tipo//
+        });
+        if(req.files?.img){
+            const {public_id, secure_url} = await uploadImage(req.files.img.tempFilePath)
+            user.img ={
+                public_id,
+                secure_url  
+            }
+            fs.unlink(req.files.img.tempFilePath)
+        }
+
+        await user.save();
         //jwt token 
         const {token, expiresIn} = generateToken(user.id);  
         generateRefreshToken(user.id, res)

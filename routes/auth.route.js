@@ -1,6 +1,6 @@
 import {Router} from "express";
 import fileUpload from "express-fileupload";
-import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId} from "../controllers/auth.controller.js";
+import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId, registerUser} from "../controllers/auth.controller.js";
 import { requireToken } from "../middlewares/requireToken.js";
 import { requireRefreshToken } from "../middlewares/requireRefreshToken.js";
 import { bodyLoginVlidator, bodyRegisterValidator, bodyUpdateValidator, paramLinkValidator } from "../middlewares/validatosManager.js";
@@ -8,6 +8,7 @@ const router = Router();
 
 //registrar un usuario, reibe un json y esta validado el cuerpo
 router.post('/register', fileUpload({useTempFiles: true, tempFileDir: './uplloads'}) ,register);
+router.post('/registerUser', fileUpload({useTempFiles: true, tempFileDir: './uplloads'}) ,registerUser);
 //trae una lista con los usuarios de la bd
 router.get('/users', getUsers);
 //Hace un login mediante un token

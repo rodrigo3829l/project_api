@@ -34,8 +34,7 @@ const userSchema = new mongoose.Schema({
         index : {unique : true},
     },
     sexo : {
-        type: String,
-        enum : ["Masculino", "Femenino"]
+        type: String,   
     },
     pregunta : String,
     respuesta : String,

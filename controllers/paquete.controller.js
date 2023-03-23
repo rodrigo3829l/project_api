@@ -1,6 +1,7 @@
 import { GetPaquetes, Paquetes } from "../models/Paquete.js";
 import { Productos } from "../models/Productos.js";
 import {uploadImage, deleteImage} from '../utils/cloudinary.js'
+import fs from 'fs-extra';
 export const addPaquetes = async (req, res) => {
     try {
         const {

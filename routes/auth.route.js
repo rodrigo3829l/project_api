@@ -14,7 +14,7 @@ router.get('/users', getUsers);
 //Hace un login mediante un token
 router.post('/login',login);
 //Muestra la informacion de un usuario en especifico
-router.get('/protected', infoUser)
+router.get('/protected', requireToken, infoUser)
 //refresca el token, pues este se cadica cada 15 min
 router.get("/refresh" ,refreshToken, )
 //cierra la sesion

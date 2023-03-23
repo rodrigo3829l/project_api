@@ -1,5 +1,6 @@
 import { User } from "../models/Users.js";
 import jwt from 'jsonwebtoken'
+import fs from 'fs-extra';
 import { generateRefreshToken, generateToken, TokenVerificationErrors } from "../utils/tokenManager.js";
 import {uploadImage, deleteImage} from '../utils/cloudinary.js'
 
@@ -8,7 +9,7 @@ export const register = async (req, res) => {
          direccion, userName, password, celphone, 
          email, sexo, pregunta, respuesta, tipo} = req.body;
     try {
-        console.log(req.files)
+        //console.log(req.files)
         let user = await User.findOne({userName});
         if(user) throw {code: 11000};
 
@@ -42,7 +43,7 @@ export const register = async (req, res) => {
         //jwt token 
         //const {token, expiresIn} = generateToken(user.id);  
         //generateRefreshToken(user.id, res)
-        //console.log(user)
+        console.log(user)
         //return res.status(201).json({token, expiresIn});
     } catch (error) {
         console.log(error)

@@ -43,7 +43,7 @@ export const addPaquetes = async (req, res) => {
             fs.unlink(req.files.img.tempFilePath)
         }
           
-        //const newPaquete = await addPaquete.save();
+        const newPaquete = await addPaquete.save();
         console.log(addPaquete)
         return res.status(201).json({addPaquete});
     } catch (error) {

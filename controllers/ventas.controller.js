@@ -51,6 +51,7 @@ export const addVenta = async (req, res) => {
           idUsuario, 
           paquetes : paq,
           total:totalPaqs,
+          estado : 'No entregado',
           encargadoEntrega : encargados[numAleatorio]._id
         })
         const newVenta = await venta.save();
@@ -81,11 +82,11 @@ export const getVentaForId = async (req, res) =>{
         let i ;
         for ( i = 0; i < paquetes.length; i++){
             const paq = await Paquetes.findById(paquetes[i].idPaquete);
-            console.log(paq.nombre);
+            // console.log(paq.nombre);
             const addPaq = {
                 paquete: paq.nombre,
-                cantidad : paquetes[0].cantidad,
-                total: paquetes[0].total,
+                cantidad : paquetes[i].cantidad,
+                total: paquetes[i].total,
             }
             getPaquetes.push(addPaq);
         }

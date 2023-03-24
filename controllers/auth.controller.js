@@ -145,7 +145,7 @@ export const login = async (req, res) => {
 export const infoUser = async (req, res) => {
     try {
         const user = await User.findById(req.uid).lean()
-        return res.json({_id: user._id, userName: user.userName, email: user.email})
+        return res.json({_id: user._id, userName: user.userName, email: user.email, tipo: user.tipo})
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: 'Error de servidor'})

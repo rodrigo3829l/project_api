@@ -61,8 +61,8 @@ export const addProduct = async (req, res) => {
             fs.unlink(req.files.img.tempFilePath)
         }
 
-        //const añadeProduct = await newProduct.save();
-        return res.status(201).json({newProduct});
+        const añadeProduct = await newProduct.save();
+        return res.status(201).json({añadeProduct});
     } catch (error) {
         console.log(error)
         if (error.code === 11000) {

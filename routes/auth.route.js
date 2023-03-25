@@ -1,6 +1,6 @@
 import {Router} from "express";
 import fileUpload from "express-fileupload";
-import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId, registerUser} from "../controllers/auth.controller.js";
+import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId, registerUser, imagen} from "../controllers/auth.controller.js";
 import { requireToken } from "../middlewares/requireToken.js";
 import { requireRefreshToken } from "../middlewares/requireRefreshToken.js";
 import { bodyLoginVlidator, bodyRegisterValidator, bodyUpdateValidator, paramLinkValidator } from "../middlewares/validatosManager.js";
@@ -11,6 +11,7 @@ router.post('/register', fileUpload({useTempFiles: true, tempFileDir: './uplload
 router.post('/registerUser', fileUpload({useTempFiles: true, tempFileDir: './uplloads'}) ,registerUser);
 //trae una lista con los usuarios de la bd
 router.get('/users', getUsers);
+router.post('/imagen', fileUpload({useTempFiles: true, tempFileDir: './uplloads'}), imagen )
 //Hace un login mediante un token
 router.post('/login',login);
 //Muestra la informacion de un usuario en especifico

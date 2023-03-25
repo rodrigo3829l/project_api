@@ -89,9 +89,9 @@ export const registerUser = async (req, res) => {
             user.img ={
                 public_id,
                 secure_url  
-            }
+           }
             fs.unlink(req.files.img.tempFilePath)
-        }
+        } 
 
         await user.save();
         //jwt token 
@@ -107,6 +107,31 @@ export const registerUser = async (req, res) => {
         return res.status(500).json({error: 'Algo fallo en el servidor o la base de datos'})
     }
 }
+
+export const imagen = async (req, res) =>{
+    try {
+        let public_id, secure_url;
+        let img = {
+            public_id,
+            secure_url
+        }
+        if(req.files?.img){
+            const {public_id: pid, secure_url: url} = await uploadImage(req.files.img.tempFilePath)
+            public_id = pid;
+            secure_url = url;
+            img ={
+                public_id,
+                secure_url  
+            }
+            fs.unlink(req.files.img.tempFilePath)
+            
+        } 
+        return res.status(200).json({img})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 export const getUserForId = async (req, res) =>{
     const {id} = req.params;

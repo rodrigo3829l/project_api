@@ -185,7 +185,8 @@ export const refreshToken  = (req, res) => {
         console.log({token, expiresIn})
         return res.json({token, expiresIn})
     } catch (error) {
-        console.log(error.message);
+        console.log('error en la funcion refresh token')
+        console.log(error);
         return res.status(500).json({error: 'Error de servidor'})
     }
 };

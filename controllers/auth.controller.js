@@ -158,8 +158,8 @@ export const login = async (req, res) => {
         //generar el jwt token
         const {token, expiresIn} = generateToken(user.id);  
         generateRefreshToken(user.id, res)
-
-
+        console.log('login')
+        console.log({token, expiresIn})
         return res.json({token, expiresIn})
 
     } catch (error) {
@@ -181,6 +181,8 @@ export const infoUser = async (req, res) => {
 export const refreshToken  = (req, res) => {
     try {
         const {token, expiresIn} = generateToken(req.uid);  
+        console.log('refresh')
+        console.log({token, expiresIn})
         return res.json({token, expiresIn})
     } catch (error) {
         console.log(error.message);

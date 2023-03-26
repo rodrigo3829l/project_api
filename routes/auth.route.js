@@ -17,7 +17,7 @@ router.post('/login',login);
 //Muestra la informacion de un usuario en especifico
 router.get('/protected', requireToken, infoUser)
 //refresca el token, pues este se cadica cada 15 min
-router.get("/refresh" ,refreshToken, )
+router.get("/refresh", requireRefreshToken ,refreshToken, )
 //cierra la sesion
 router.get('/logout', logout)
 //Actualiza a un usuario mediante el id

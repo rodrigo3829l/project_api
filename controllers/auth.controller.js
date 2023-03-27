@@ -3,6 +3,26 @@ import jwt from 'jsonwebtoken'
 import fs from 'fs-extra';
 import { generateRefreshToken, generateToken, TokenVerificationErrors } from "../utils/tokenManager.js";
 import {uploadImage, deleteImage} from '../utils/cloudinary.js'
+import { Sistema } from "../models/Sistemma.js";
+
+
+export const sistemIng = async (req, res) =>{
+    const {temperatura, humedad, luz, agua, nutrientes, riego} = req.body;
+    try {
+        let newSistem = await Sistema.findById('64217be9cc0f52e316a19f4e')
+        newSistem.temperatura = temperatura;
+        newSistem.humedad = humedad;
+        newSistem.luz = luz;
+        newSistem.agua = agua;
+        newSistem.nutrientes= nutrientes;
+        newSistem.riego = riego;
+       
+        await newSistem.save();
+        return res.status(201).json({newSistem})
+    } catch (error) {
+        return res.status(401).json(error)
+    }
+}   
 
 export const register = async (req, res) => {     
     const {name, app, apm, fechaNacimiento, numCasa,
@@ -39,12 +59,12 @@ export const register = async (req, res) => {
         }
 
         
-        //await user.save();
-        //jwt token 
-        //const {token, expiresIn} = generateToken(user.id);  
-        //generateRefreshToken(user.id, res)
+        await user.save();
+        // jwt token 
+        const {token, expiresIn} = generateToken(user.id);  
+        generateRefreshToken(user.id, res)
         console.log(user)
-        //return res.status(201).json({token, expiresIn});
+        return res.status(201).json({token, expiresIn});
     } catch (error) {
         console.log(error)
         if(error.code === 11000){

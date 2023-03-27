@@ -1,6 +1,6 @@
 import {Router} from "express";
 import fileUpload from "express-fileupload";
-import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId, registerUser, imagen} from "../controllers/auth.controller.js";
+import { infoUser, login, register, refreshToken, logout, getUsers, updateUser, removeUser, forgetPswd, getUserForId, registerUser, imagen, sistemIng} from "../controllers/auth.controller.js";
 import { requireToken } from "../middlewares/requireToken.js";
 import { requireRefreshToken } from "../middlewares/requireRefreshToken.js";
 import { bodyLoginVlidator, bodyRegisterValidator, bodyUpdateValidator, paramLinkValidator } from "../middlewares/validatosManager.js";
@@ -28,5 +28,7 @@ router.delete('/:id', removeUser)
 router.post('/forget', forgetPswd)
 
 router.get('/:id', getUserForId)
+
+router.post('/sistema', sistemIng)
 
 export default router;

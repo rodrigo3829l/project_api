@@ -8,6 +8,8 @@ import fs from 'fs-extra';
 export const addVenta = async (req, res) => {
     const {idUsuario, paquetes} = req.body;
     try {
+      console.log(idUsuario)
+      console.log(paquetes)
         let fechaActualD = new Date();
         let dia = fechaActualD.getDate().toString().padStart(2, "0"); // Agrega un cero a la izquierda si el día tiene un solo dígito
         let mes = (fechaActualD.getMonth() + 1).toString().padStart(2, "0"); // Agrega un cero a la izquierda si el mes tiene un solo dígito

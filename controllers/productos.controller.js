@@ -91,7 +91,6 @@ export const getProducto = async (req, res) =>{
 
 export const getProductos = async (req, res) =>{
     try {
-        
         const productos = await Productos.find();
         let i;
         let aromasId = [];
@@ -102,6 +101,7 @@ export const getProductos = async (req, res) =>{
         let getProductos = [];
         for (i = 0; i < productos.length; i++){
             const {aroma} = await Aroma.findById(aromasId[i]);
+            console.log(aroma)
             const getProduct = new GetProductos({
                 nombre:productos[i].nombre, 
                 descripcion: productos[i].descripcion, 

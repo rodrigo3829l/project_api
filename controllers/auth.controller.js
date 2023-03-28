@@ -114,7 +114,7 @@ export const registerUser = async (req, res) => {
         } 
 
         await user.save();
-        //jwt token 
+        //jwt token     
         const {token, expiresIn} = generateToken(user.id);  
         generateRefreshToken(user.id, res)
         console.log(user)

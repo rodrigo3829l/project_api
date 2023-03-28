@@ -18,7 +18,7 @@ const app = express();
 
 console.log("Hola bd => " , process.env.URI_MONGO);
 
-const whiteList = [process.env.ORIGIN1, process.env.ORIGIN2]
+const whiteList = [process.env.ORIGIN1, process.env.ORIGIN2 , process.env.ORIGIN3, process.env.ORIGIN4, process.env.ORIGIN5, process.env.ORIGIN6 ]
 
 app.use(
     cors({

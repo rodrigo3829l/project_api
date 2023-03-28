@@ -331,4 +331,59 @@ export const getVentasEntreHoras = async (req, res) => {
       console.log(error);
     }
   }
+  export const getVentasByUserId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const ventas = await Ventas.find({ idUsuario: id });
+    const getVentas = [];
+
+    for (const venta of ventas) {
+      const user = await User.findById(venta.idUsuario.toString());
+      const userName = user ? `${user.name} ${user.app} ${user.apm}` : '';
+
+      const getPaquetes = await Promise.all(
+        venta.paquetes.map(async (paquete) => {
+          const { nombre } = await Paquetes.findById(paquete.idPaquete);
+          return {
+            paquete: nombre,
+            cantidad: paquete.cantidad,
+            total: paquete.total
+          };
+        })
+      );
+
+      const encargado = await Encargado.findById(
+        venta.encargadoEntrega.toString()
+      );
+      const encargadoUsuario = await User.findById(
+        encargado.idUsuario.toString()
+      );
+      const encargadoNombre = `${encargadoUsuario.name} ${
+        encargadoUsuario.app
+      } ${encargadoUsuario.apm}`;
+
+      const getVenta = new GetVentas({
+        fecha: venta.fecha,
+        hora: venta.hora,
+        usuario: userName,
+        paquetes: getPaquetes,
+        total: venta.total,
+        _id: venta._id,
+        estado: venta.estado,
+        encargadoEntrega: encargadoNombre,
+      });
+
+      getVentas.push(getVenta);
+    }
+
+    return res.status(200).json({ ventas: getVentas });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: "Algo fallo en el servidor o la base de datos" });
+  }
+};
+
+
   

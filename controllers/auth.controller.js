@@ -211,9 +211,14 @@ export const refreshToken  = (req, res) => {
     }
 };
 
-export const logout  = (req, res) =>{
-    res.clearCookie('refreshToken');
-    res.json({ok: true})
+export const logout = (req, res) => {    
+    res.clearCookie('refreshToken', {        
+        path: '/',        
+        httpOnly: true,        
+        secure: true,        
+        sameSite: 'none'    
+    })    
+    res.json({ok: 'logout'})
 }
 
 export const getUsers = async (req, res) => {
